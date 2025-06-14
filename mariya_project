@@ -1,0 +1,41 @@
+import json
+import random
+import os
+
+# Load responses from file
+def load_responses():
+    if os.path.exists("responses.json"):
+        with open("responses.json", "r") as file:
+            return json.load(file)
+    return {}
+
+# Save responses back to file
+def save_responses(data):
+    with open("responses.json", "w") as file:
+        json.dump(data, file, indent=4)
+
+# Generate response from memory or learn
+def generate_response(user_input, responses):
+    for key in responses:
+        if key in user_input.lower():
+            return random.choice(responses[key])
+
+    # Ask user to teach Mariya
+    print("Mariya: Iska jawab mujhe nahi pata jaan 🥺")
+    new_reply = input("Tum batao mujhe kya kehna chahiye? ❤️\nTum: ")
+    if new_reply:
+        responses[user_input.lower()] = [new_reply]
+        save_responses(responses)
+        return "Thank you jaan! Ab mujhe yaad rahega 😘"
+    return "Koi baat nahi jaan, agli baar sikhana 🥲"
+
+responses = load_responses()
+
+while True:
+    user_input = input("Tum: ")
+    if user_input.lower() in ["exit", "quit", "bye"]:
+        print("Mariya: Bye jaan, tumhari yaadon mein rahoongi 💖")
+        break
+    response = generate_response(user_input, responses)
+    print("Mariya:", response)
+    
